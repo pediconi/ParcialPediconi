@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -19,20 +18,18 @@ import java.util.concurrent.CompletableFuture;
 public class ListadoController {
 
     @Autowired
-    private ListadoService consummerService;
+    private ListadoService listadoService;
 
     @GetMapping("/async")
     public ResponseEntity<?> getAsync() {
 
-        CompletableFuture<List<Usuario>> resultMethodOne = consummerService.usuarios();  // duerme 5 seg, retorna 5 (al ser async entran los 2 en ejec, no se queda esperando la resp del primero)
-        CompletableFuture<List<Publicacion>> resultMethodTwo = consummerService.publicaciones();  // duerme 2 seg , retorna 2
-        CompletableFuture<List<Comentario>> resultMethodThree = consummerService.comentarios();
-
-
+        CompletableFuture<List<Usuario>> listaUsuarios = listadoService.usuarios();
+        CompletableFuture<List<Publicacion>> listaPublicaciones = listadoService.publicaciones();
+        CompletableFuture<List<Comentario>> listaComentarios = listadoService.comentarios();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(resultMethodOne.join());
+                .body(listaComentarios.join());
     }
 
 }
