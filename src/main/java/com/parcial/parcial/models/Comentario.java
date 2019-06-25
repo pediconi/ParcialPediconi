@@ -1,5 +1,6 @@
 package com.parcial.parcial.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Comentario {
     private Integer id;
     private String nombre;
     private String descripcion;
+    @JsonFormat(pattern="dd-MMM-yyyy")
     private LocalDateTime fecha;
 
 

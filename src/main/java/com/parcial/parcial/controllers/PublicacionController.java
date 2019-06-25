@@ -3,21 +3,18 @@ package com.parcial.parcial.controllers;
 
 import com.parcial.parcial.models.Publicacion;
 import com.parcial.parcial.models.Usuario;
+import com.parcial.parcial.repositories.ComentariosPorPublicacion;
 import com.parcial.parcial.repositories.PublicacionRepository;
 import com.parcial.parcial.repositories.UsuarioRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@RequestMapping("/publicacion")  // le indico que es una controladora osea cuando ponga localhost/persona viene a esta clase
+@RequestMapping("/publicacion")
 @RestController
 public class PublicacionController {
 
@@ -29,22 +26,22 @@ public class PublicacionController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @PostMapping("/{id_usuario}")     // a la persona que recibe este metodo x post la guarda en la lista
+    @PostMapping("/{id_usuario}")
     public void addPublicacion(@PathVariable Integer id_usuario, @RequestBody Publicacion p) {
 
-        Usuario u = usuarioRepository.findById(id_usuario) // me traigo el equipo lo busco x id
+        Usuario u = usuarioRepository.findById(id_usuario)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.BAD_REQUEST, String.format(USUARIO_NOT_FOUND,id_usuario)));
 
-        p.setUsuario(u);   // como en el json cuando cargo un jugador no pongo su equipo(x el json ignore de la clase jugador), lo tengo q setear aca
-        u.getPublicaciones().add(p);     // a ese equipo le añado el jugador a su lista y guardo
+        p.setUsuario(u);
+        u.getPublicaciones().add(p);
 
         publicacionRepository.save(p);
         usuarioRepository.save(u);
     }
 
-    @GetMapping("")   // peticiones get(desde postman) envia una peticion y llama a este metodo
+    @GetMapping("")
     public List<Publicacion> getAll(){
-        return publicacionRepository.findAll();               // levanto los jugadores de la bd y los mapeo para mostrarlos
+        return publicacionRepository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -58,7 +55,17 @@ public class PublicacionController {
         publicacionRepository.deleteById(id);
     }
 
-    @Scheduled(fixedDelayString = "${my.property.fixed.delay.seconds}000")    // 1000ms = 1 seg
+    @PutMapping("/{id}")
+    public void updateById(@RequestBody Publicacion c, @PathVariable Integer id){
+        Publicacion buscado = publicacionRepository.getOne(id);
+
+        buscado.setTitulo(c.getTitulo());
+        buscado.setDescripcion(c.getDescripcion());
+        buscado.setFoto(c.getFoto());
+        publicacionRepository.saveAndFlush(buscado);
+    }
+
+    @Scheduled(cron = "${scheduling.job.cron}")
     public void eliminaComentarios() {
         List<Publicacion> publicacionse = publicacionRepository.findAll();
         for(Publicacion p : publicacionse){
@@ -66,6 +73,11 @@ public class PublicacionController {
             p.getComentarios().removeIf(x -> (x.getFecha().plusMinutes(1).isBefore(LocalDateTime.now())));
             publicacionRepository.saveAndFlush(p);
         }
+    }
+
+    @GetMapping("/Native")
+    public List<ComentariosPorPublicacion> getComentariosPorPublicacion(){
+        return publicacionRepository.getComentariosPorPublicacion();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.parcial.parcial.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,13 +17,14 @@ import java.util.List;
 @Entity
 public class Publicacion {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
+    //private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy");
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String titulo;
     private String descripcion;
     private String foto;
+    @JsonFormat(pattern="dd-MMM-yyyy")
     private LocalDateTime fechaPublicacion;
     private Integer likes;
 
