@@ -29,7 +29,7 @@ public class ListadoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(listaComentarios.join());
+                .body(listaComentarios.join());   // No me alcanzo el tiempo, intentando retornar las 3 listas.
     }
 
 }

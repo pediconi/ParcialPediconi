@@ -70,7 +70,7 @@ public class PublicacionController {
         List<Publicacion> publicacionse = publicacionRepository.findAll();
         for(Publicacion p : publicacionse){
 
-            p.getComentarios().removeIf(x -> (x.getFecha().plusMinutes(1).isBefore(LocalDateTime.now())));
+            p.getComentarios().removeIf(x -> (x.getFecha().plusMinutes(1).isBefore(LocalDateTime.now()))); // Borra los que pasaron 1 minuto
             publicacionRepository.saveAndFlush(p);
         }
     }

@@ -25,7 +25,7 @@ public class ListadoService {
     @Async("threadPoolTaskExecutor")
     public CompletableFuture<List<Usuario>> usuarios() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(2000);  // delay 2 seg
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -35,7 +35,7 @@ public class ListadoService {
     @Async("threadPoolTaskExecutor")
     public CompletableFuture<List<Publicacion>> publicaciones() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(2000);  // delay 2 seg
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class ListadoService {
     @Async("threadPoolTaskExecutor")
     public CompletableFuture<List<Comentario>> comentarios() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(2000);   // delay 2 seg
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
